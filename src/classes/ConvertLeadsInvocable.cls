@@ -108,7 +108,7 @@ public with sharing class ConvertLeadsInvocable {
 
         // convert leads, all or none
         // if any has error then exception is thrown automatically and changes rolled back
-        List<Database.LeadConvertResult> convertResults = Database.convertLead( convertRequests, true );
+        List<Database.LeadConvertResult> convertResults = Database.convertLead( convertRequests );
 
         // transform the database convert results to invocable result
         List<LeadConvertResult> results = new List<LeadConvertResult>();
