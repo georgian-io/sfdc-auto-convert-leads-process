@@ -5,7 +5,6 @@
  * https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dml_convertLead.htm
  * https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_InvocableVariable.htm
  *
- * Developed by Doug Ayers, douglascayers.com
  */
 public with sharing class ConvertLeadsInvocable {
 
@@ -42,6 +41,12 @@ public with sharing class ConvertLeadsInvocable {
         public ID contactId;
 
         @InvocableVariable(
+            label = 'Opportunity ID'
+            description = 'The specific Opportunity to convert Lead into. If blank then creates a new Opportunity with name'
+        )
+        public ID opportunityId;
+
+        @InvocableVariable(
             label = 'Overwrite Lead Source?'
             description = 'Overwrite the LeadSource field on the target Contact with the LeadSource field from the Lead? Default is false. If true then must also specify "Contact ID".'
         )
@@ -55,7 +60,7 @@ public with sharing class ConvertLeadsInvocable {
 
         @InvocableVariable(
             label = 'Opportunity Name'
-            description = 'If "Create Opportunity" is true then this is the name of the new opportunity. If blank then defaults to Company field from the Lead.'
+            description = 'If "Opportunity Is" is not set, then this is the name of the new opportunity that will be created. If blank then defaults to Company field from the Lead.'
         )
         public String opportunityName;
 
@@ -90,7 +95,6 @@ public with sharing class ConvertLeadsInvocable {
 
         @InvocableVariable( label = 'Opportunity ID' )
         public ID opportunityId;
-
     }
 
     // --------------------------------------------------------------------------------
@@ -136,11 +140,16 @@ public with sharing class ConvertLeadsInvocable {
             convertRequest.setContactId( request.contactId );
         }
 
+
+        if ( request.opportunityId != null ) {
+            convertRequest.setOpportunityId( request.opportunityId );
+        }
+
         if ( request.overwriteLeadSource != null && request.overwriteLeadSource ) {
             convertRequest.setOverwriteLeadSource( request.overwriteLeadSource );
         }
 
-        if ( request.createOpportunity != null && !request.createOpportunity ) {
+        if ( request.createOpportunity != null ) {
             convertRequest.setDoNotCreateOpportunity( !request.createOpportunity );
         }
 
